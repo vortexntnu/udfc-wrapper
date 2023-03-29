@@ -23,7 +23,8 @@ MATH(EXPR DASH_IDX "${DASH_IDX}+1")
 string(SUBSTRING ${UNAME_RESULT} ${DASH_IDX} -1 LINUX_KERNEL_DEVICE)
 
 if (${LINUX_KERNEL_DEVICE} STREQUAL "raspi")
-    message("Raspberry Pi: default OpenCV is used.")
+  message("Raspberry Pi: default OpenCV is used.")
+  find_package(OpenCV)
 endif()
 
 # Find CUDA enabled OpenCV build on Xavier
