@@ -14,4 +14,4 @@ k3: -1.242539054818194745e-02
 camera_id: 0
 
 # Image pipeline to get the stream:
-pipeline_id: 2
+pipeline_id: 0

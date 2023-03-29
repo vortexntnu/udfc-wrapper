@@ -7,18 +7,29 @@ project(udfc_wrapper_node)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS 
+find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   roscpp
   sensor_msgs
   std_msgs
-  
 )
 
+# Determine the kernel version
+execute_process(COMMAND uname -r OUTPUT_VARIABLE UNAME_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE)
+message(-- " Kernel version: " ${UNAME_RESULT})
+string(FIND ${UNAME_RESULT} "-" DASH_IDX REVERSE)
+MATH(EXPR DASH_IDX "${DASH_IDX}+1")
+string(SUBSTRING ${UNAME_RESULT} ${DASH_IDX} -1 LINUX_KERNEL_DEVICE)
+
+if (${LINUX_KERNEL_DEVICE} STREQUAL "raspi")
+  message("Raspberry Pi: default OpenCV is used.")
+  find_package(OpenCV)
+endif()
+
 # Find CUDA enabled OpenCV build on Xavier
-if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64" )
-  find_package(OpenCV 4.5.1 REQUIRED)
+if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "aarch64" AND ${LINUX_KERNEL_DEVICE} STREQUAL "tegra")
+  find_package(OpenCV 4.2.0 REQUIRED)
 else()
   find_package(OpenCV)
 endif()
